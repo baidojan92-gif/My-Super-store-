@@ -14,7 +14,7 @@
 <nav id="nav">
   <button data-page="dashboard" class="active">Home</button><button data-page="products">Products</button>
   <button data-page="sales">Billing</button><button data-page="customers">Customers</button>
-  <button data-page="suppliers">Suppliers</button><button data-page="reports">Reports</button>
+  <button data-page="suppliers">Suppliers</button><button data-page="reports">Reports</button><button data-page="operations">Operations</button>
 </nav>
 <main>
 <section id="dashboard" class="page active">
@@ -26,7 +26,7 @@
 <section id="products" class="page">
   <h1 data-i="products">Products / Stock</h1>
   <div class="panel">
-    <h2 data-i="addProduct">Add product</h2>
+    <h2 id="productFormTitle" data-i="addProduct">Add product</h2><input type="hidden" id="editProductId"><button type="button" id="cancelEdit" hidden>Cancel edit</button>
     <form id="productForm" class="formgrid">
       <input id="pname" required placeholder="Product name"><input id="pbarcode" placeholder="Barcode (scan/type)">
       <input id="pcost" required type="number" min="0" step=".01" placeholder="Cost price">
@@ -56,15 +56,39 @@
 </section>
 <section id="suppliers" class="page">
   <h1 data-i="suppliers">Suppliers</h1>
-  <div class="panel"><form id="supplierForm" class="row"><input id="sname" required placeholder="Supplier name"><input id="sphone" placeholder="Phone"><button data-i="save">Save</button></form><div id="supplierRows"></div></div>
+  <div class="panel">
+    <h2>Supplier list</h2>
+    <form id="supplierForm" class="row"><input id="sname" required placeholder="Supplier name"><input id="sphone" placeholder="Phone"><button data-i="save">Save</button></form>
+    <div id="supplierRows"></div>
+  </div>
+  <div class="panel">
+    <h2>Record stock purchase</h2>
+    <form id="purchaseForm" class="formgrid">
+      <label>Supplier <select id="purchaseSupplier" required></select></label>
+      <label>Product <select id="purchaseProduct" required></select></label>
+      <input id="purchaseQty" type="number" min="0.01" step="0.01" required placeholder="Quantity received">
+      <input id="purchaseCost" type="number" min="0" step="0.01" required placeholder="Unit cost (PKR)">
+      <input id="purchasePaid" type="number" min="0" step="0.01" value="0" placeholder="Amount paid now">
+      <button type="submit">Save purchase & update stock</button>
+    </form>
+    <p class="hint">Purchase quantity will be added to stock. Any unpaid amount will be added to the supplier balance.</p>
+    <div id="purchaseRows"></div>
+  </div>
 </section>
 <section id="reports" class="page">
   <h1 data-i="reports">Reports & backup</h1>
-  <div class="stats"><article><small>Total sales</small><b id="allSales">Rs 0</b></article><article><small>Total profit</small><b id="allProfit">Rs 0</b></article><article><small>Customer credit</small><b id="creditTotal">Rs 0</b></article></div>
+  <div class="stats"><article><small>Total sales</small><b id="allSales">PKR 0</b></article><article><small>Total profit</small><b id="allProfit">PKR 0</b></article><article><small>Customer credit</small><b id="creditTotal">PKR 0</b></article><article><small>Supplier payable</small><b id="supplierDueTotal">PKR 0</b></article></div>
   <div class="panel"><h2>Data backup</h2><p>Export a backup regularly. Import it on another device to transfer data. Automatic cloud sync is not configured in this starter version.</p><button id="exportData">Export backup</button><label class="filebtn">Import backup <input id="importData" type="file" accept="application/json"></label></div>
-  <div class="panel"><h2>Recent sales</h2><div id="salesRows"></div></div>
+  <div class="stats"><article><small>Total expenses</small><b id="expenseTotal">PKR 0</b></article><article><small>Sales returns</small><b id="returnTotal">PKR 0</b></article></div><div class="panel"><h2>Recent sales</h2><div id="salesRows"></div></div><div class="panel"><h2>Payment history</h2><div id="paymentRows"></div></div>
+</section>
+
+<section id="operations" class="page">
+  <h1>Store operations</h1>
+  <div class="panel"><h2>Daily expenses</h2><form id="expenseForm" class="formgrid"><input id="expenseDesc" required placeholder="Expense description"><select id="expenseCategory"><option>Rent</option><option>Electricity</option><option>Transport</option><option>Salary</option><option>Repair</option><option>Other</option></select><input id="expenseAmount" type="number" min="0.01" step="0.01" required placeholder="Amount (PKR)"><button type="submit">Save expense</button></form><div id="expenseRows"></div></div>
+  <div class="panel"><h2>Sales return</h2><form id="returnForm" class="formgrid"><label>Sale / Bill <select id="returnSale" required></select></label><label>Product <select id="returnItem" required></select></label><input id="returnQty" type="number" min="0.01" step="0.01" required placeholder="Return quantity"><input id="returnReason" required placeholder="Return reason"><button type="submit">Record return & restore stock</button></form><div id="returnRows"></div><p class="hint">Return records add the returned quantity back to stock. Refund/payment settlement should be handled separately in cash records.</p></div>
+  <div class="panel"><h2>Stock adjustment</h2><form id="adjustForm" class="formgrid"><label>Product <select id="adjustProduct" required></select></label><input id="adjustQty" type="number" step="0.01" required placeholder="Change (+ add / − reduce)"><input id="adjustReason" required placeholder="Reason (damage, count, opening) "><button type="submit">Save adjustment</button></form><div id="stockMoveRows"></div></div>
 </section>
 </main>
-<footer>MY SUPER STORE POS • Starter version • Data stored on this device</footer>
+<footer>MY SUPER STORE POS • Version 3.0 • Data stored on this device</footer>
 <script src="app.js"></script>
 </body></html>

@@ -1,0 +1,17 @@
+{
+  "store_name": "MY SUPER STORE POS",
+  "currency": "PKR",
+  "currency_name": "Pakistani Rupee",
+  "platforms": [
+    "Android PWA",
+    "Desktop Web"
+  ],
+  "languages": [
+    "ur",
+    "ps",
+    "pt",
+    "en"
+  ],
+  "mode": "offline-first",
+  "version": "3.0-returns-expenses-stock-adjustment-payment-history"
+}
