@@ -1,94 +1,113 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#123b32"><meta name="description" content="MY SUPER STORE POS">
-<link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MY SUPER STORE POS</title>
+<style>
+body{font-family:Arial;background:#f1f5f9;margin:0;padding:15px}
+header{background:#075e45;color:white;padding:20px;text-align:center;border-radius:12px}
+.card{background:white;padding:15px;margin:12px 0;border-radius:12px}
+input,select,button{width:100%;padding:12px;margin:6px 0;box-sizing:border-box;border:1px solid #ccc;border-radius:7px;font-size:16px}
+button{background:#087b55;color:white;border:0;font-weight:bold}
+table{width:100%;background:white;border-collapse:collapse}
+td,th{padding:9px;border:1px solid #ddd;text-align:left}
+h3{color:#075e45}
+</style>
 </head>
 <body>
-<header class="top">
-  <div><div class="brand">MY SUPER STORE POS</div><small id="status">Offline-ready • Local data</small></div>
-  <select id="lang" aria-label="Language"><option value="ur">اردو</option><option value="ps">پښتو</option><option value="pt">Português</option><option value="en">English</option></select>
+<header>
+<h2>MY SUPER STORE POS</h2>
+<p>Super Store Management System</p>
 </header>
-<nav id="nav">
-  <button data-page="dashboard" class="active">Home</button><button data-page="products">Products</button>
-  <button data-page="sales">Billing</button><button data-page="customers">Customers</button>
-  <button data-page="suppliers">Suppliers</button><button data-page="reports">Reports</button><button data-page="operations">Operations</button>
-</nav>
-<main>
-<section id="dashboard" class="page active">
-  <h1 data-i="dashboard">Dashboard</h1>
-  <div class="stats"><article><small data-i="todaySales">Today's sales</small><b id="todaySales">Rs 0</b></article><article><small data-i="todayProfit">Today's profit</small><b id="todayProfit">Rs 0</b></article><article><small data-i="stockValue">Stock value</small><b id="stockValue">Rs 0</b></article><article><small data-i="lowStock">Low stock</small><b id="lowStock">0</b></article></div>
-  <div class="panel"><h2 data-i="alerts">Stock & expiry alerts</h2><div id="alerts">No alerts</div></div>
-  <div class="panel"><h2 data-i="quickActions">Quick actions</h2><div class="actions"><button data-go="sales" data-i="newSale">New sale</button><button data-go="products" data-i="addProduct">Add product</button><button data-go="reports" data-i="reports">Reports</button></div></div>
-</section>
-<section id="products" class="page">
-  <h1 data-i="products">Products / Stock</h1>
-  <div class="panel">
-    <h2 id="productFormTitle" data-i="addProduct">Add product</h2><input type="hidden" id="editProductId"><button type="button" id="cancelEdit" hidden>Cancel edit</button>
-    <form id="productForm" class="formgrid">
-      <input id="pname" required placeholder="Product name"><input id="pbarcode" placeholder="Barcode (scan/type)">
-      <input id="pcost" required type="number" min="0" step=".01" placeholder="Cost price">
-      <input id="psell" required type="number" min="0" step=".01" placeholder="Sale price">
-      <input id="pqty" required type="number" min="0" step=".01" placeholder="Opening stock">
-      <input id="pmin" type="number" min="0" step=".01" placeholder="Low stock alert level">
-      <label>Expiry date <input id="pexp" type="date"></label><button type="submit" data-i="save">Save product</button>
-    </form>
-    <div class="row"><input id="productSearch" placeholder="Search name / barcode"><button id="scanBtn" type="button" data-i="cameraScan">Camera scan</button></div>
-    <video id="scanner" playsinline hidden></video>
-    <div class="tablewrap"><table><thead><tr><th>Product</th><th>Barcode</th><th>Qty</th><th>Cost</th><th>Sale</th><th>Expiry</th><th></th></tr></thead><tbody id="productRows"></tbody></table></div>
-  </div>
-</section>
-<section id="sales" class="page">
-  <h1 data-i="billing">Billing / New sale</h1>
-  <div class="panel">
-    <div class="row"><input id="saleBarcode" placeholder="Scan or enter barcode / product name"><button id="addToCart" data-i="add">Add</button></div>
-    <div class="tablewrap"><table><thead><tr><th>Item</th><th>Qty</th><th>Price</th><th>Total</th><th></th></tr></thead><tbody id="cartRows"></tbody></table></div>
-    <div class="row"><label>Customer <select id="saleCustomer"><option value="">Walk-in</option></select></label><label>Paid <input id="paid" type="number" min="0" step=".01" value="0"></label></div>
-    <h2>Total: <span id="cartTotal">Rs 0</span></h2><button id="completeSale" class="primary" data-i="completeSale">Complete sale & receipt</button>
-    <div id="lastReceipt"></div>
-  </div>
-</section>
-<section id="customers" class="page">
-  <h1 data-i="customers">Customers / Credit khata</h1>
-  <div class="panel"><form id="customerForm" class="row"><input id="cname" required placeholder="Customer name"><input id="cphone" placeholder="Phone"><button data-i="save">Save</button></form><div id="customerRows"></div></div>
-</section>
-<section id="suppliers" class="page">
-  <h1 data-i="suppliers">Suppliers</h1>
-  <div class="panel">
-    <h2>Supplier list</h2>
-    <form id="supplierForm" class="row"><input id="sname" required placeholder="Supplier name"><input id="sphone" placeholder="Phone"><button data-i="save">Save</button></form>
-    <div id="supplierRows"></div>
-  </div>
-  <div class="panel">
-    <h2>Record stock purchase</h2>
-    <form id="purchaseForm" class="formgrid">
-      <label>Supplier <select id="purchaseSupplier" required></select></label>
-      <label>Product <select id="purchaseProduct" required></select></label>
-      <input id="purchaseQty" type="number" min="0.01" step="0.01" required placeholder="Quantity received">
-      <input id="purchaseCost" type="number" min="0" step="0.01" required placeholder="Unit cost (PKR)">
-      <input id="purchasePaid" type="number" min="0" step="0.01" value="0" placeholder="Amount paid now">
-      <button type="submit">Save purchase & update stock</button>
-    </form>
-    <p class="hint">Purchase quantity will be added to stock. Any unpaid amount will be added to the supplier balance.</p>
-    <div id="purchaseRows"></div>
-  </div>
-</section>
-<section id="reports" class="page">
-  <h1 data-i="reports">Reports & backup</h1>
-  <div class="stats"><article><small>Total sales</small><b id="allSales">PKR 0</b></article><article><small>Total profit</small><b id="allProfit">PKR 0</b></article><article><small>Customer credit</small><b id="creditTotal">PKR 0</b></article><article><small>Supplier payable</small><b id="supplierDueTotal">PKR 0</b></article></div>
-  <div class="panel"><h2>Data backup</h2><p>Export a backup regularly. Import it on another device to transfer data. Automatic cloud sync is not configured in this starter version.</p><button id="exportData">Export backup</button><label class="filebtn">Import backup <input id="importData" type="file" accept="application/json"></label></div>
-  <div class="stats"><article><small>Total expenses</small><b id="expenseTotal">PKR 0</b></article><article><small>Sales returns</small><b id="returnTotal">PKR 0</b></article></div><div class="panel"><h2>Recent sales</h2><div id="salesRows"></div></div><div class="panel"><h2>Payment history</h2><div id="paymentRows"></div></div>
-</section>
 
-<section id="operations" class="page">
-  <h1>Store operations</h1>
-  <div class="panel"><h2>Daily expenses</h2><form id="expenseForm" class="formgrid"><input id="expenseDesc" required placeholder="Expense description"><select id="expenseCategory"><option>Rent</option><option>Electricity</option><option>Transport</option><option>Salary</option><option>Repair</option><option>Other</option></select><input id="expenseAmount" type="number" min="0.01" step="0.01" required placeholder="Amount (PKR)"><button type="submit">Save expense</button></form><div id="expenseRows"></div></div>
-  <div class="panel"><h2>Sales return</h2><form id="returnForm" class="formgrid"><label>Sale / Bill <select id="returnSale" required></select></label><label>Product <select id="returnItem" required></select></label><input id="returnQty" type="number" min="0.01" step="0.01" required placeholder="Return quantity"><input id="returnReason" required placeholder="Return reason"><button type="submit">Record return & restore stock</button></form><div id="returnRows"></div><p class="hint">Return records add the returned quantity back to stock. Refund/payment settlement should be handled separately in cash records.</p></div>
-  <div class="panel"><h2>Stock adjustment</h2><form id="adjustForm" class="formgrid"><label>Product <select id="adjustProduct" required></select></label><input id="adjustQty" type="number" step="0.01" required placeholder="Change (+ add / − reduce)"><input id="adjustReason" required placeholder="Reason (damage, count, opening) "><button type="submit">Save adjustment</button></form><div id="stockMoveRows"></div></div>
-</section>
-</main>
-<footer>MY SUPER STORE POS • Version 3.0 • Data stored on this device</footer>
-<script src="app.js"></script>
-</body></html>
+<div class="card">
+<h3>Add New Product</h3>
+<input id="name" placeholder="Product Name">
+<select id="unit">
+<option>KG</option>
+<option>Gram</option>
+<option>Liter</option>
+<option>Packet</option>
+<option>Piece</option>
+<option>Dozen</option>
+<option>Open Item</option>
+</select>
+<input id="buy" type="number" placeholder="Purchase Price">
+<input id="sell" type="number" placeholder="Selling Price">
+<input id="stock" type="number" placeholder="Stock Quantity">
+<button onclick="addProduct()">Add Product</button>
+</div>
+
+<div class="card">
+<h3>Products / سامان</h3>
+<table>
+<thead><tr><th>Name</th><th>Unit</th><th>Stock</th><th>Price</th></tr></thead>
+<tbody id="products"></tbody>
+</table>
+</div>
+
+<div class="card">
+<h3>Sales / فروخت</h3>
+<select id="product"></select>
+<input id="qty" type="number" step="0.001" placeholder="Quantity">
+<button onclick="sellProduct()">Sell Product</button>
+<h3 id="total">Total: Rs 0</h3>
+<h3 id="profit">Profit: Rs 0</h3>
+</div>
+
+<div class="card">
+<h3>Sales History</h3>
+<div id="history"></div>
+</div>
+
+<script>
+let products=JSON.parse(localStorage.getItem("products")||"[]");
+let history=JSON.parse(localStorage.getItem("history")||"[]");
+
+function save(){
+localStorage.setItem("products",JSON.stringify(products));
+localStorage.setItem("history",JSON.stringify(history));
+}
+
+function render(){
+document.getElementById("products").innerHTML=products.map(p=>
+`<tr><td>${p.name}</td><td>${p.unit}</td><td>${p.stock}</td><td>Rs ${p.sell}</td></tr>`).join("");
+
+document.getElementById("product").innerHTML=
+products.map((p,i)=>`<option value="${i}">${p.name} (${p.unit})</option>`).join("");
+
+document.getElementById("history").innerHTML=history.map(h=>
+`<p>${h.name} - ${h.qty} ${h.unit} = Rs ${h.total}</p>`).join("");
+}
+
+function addProduct(){
+let name=document.getElementById("name").value.trim();
+let unit=document.getElementById("unit").value;
+let buy=Number(document.getElementById("buy").value);
+let sell=Number(document.getElementById("sell").value);
+let stock=Number(document.getElementById("stock").value);
+if(!name||buy<0||sell<=0||stock<0||!document.getElementById("sell").value||!document.getElementById("stock").value){alert("Please enter valid product details");return;}
+products.push({name,unit,buy,sell,stock});
+save();render();alert("Product Added!");
+}
+
+function sellProduct(){
+let i=Number(document.getElementById("product").value);
+let qty=Number(document.getElementById("qty").value);
+if(!products.length||!qty||qty<=0||!Number.isInteger(i)||!products[i]||qty>products[i].stock){alert("Check product and available stock");return;}
+let p=products[i];
+let total=qty*p.sell;
+let profit=qty*(p.sell-p.buy);
+p.stock-=qty;
+history.unshift({name:p.name,qty,unit:p.unit,total});
+document.getElementById("total").innerText="Total: Rs "+total.toFixed(2);
+document.getElementById("profit").innerText="Profit: Rs "+profit.toFixed(2);
+save();render();
+document.getElementById("qty").value="";
+}
+render();
+</script>
+</body>
+</html>
